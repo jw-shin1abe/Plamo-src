@@ -1,0 +1,35 @@
+$ ps -ef | grep pipewire
+
+abe       1841  1394  0 17:01 tty1     00:00:00 /usr/bin/daemon -frB --pidfiles=~/.run --name=pipewire-pulse /usr/bin/pipewire-pulse
+abe       1844  1841  0 17:01 tty1     00:00:00 pipewire-pulse: /usr/bin/pipewire-pulse
+abe       1858  1394  0 17:01 tty1     00:00:00 /usr/bin/daemon -frB --pidfiles=~/.run --name=pipewire /usr/bin/pipewire
+abe       1859  1858  0 17:01 tty1     00:00:00 pipewire: /usr/bin/pipewire
+abe       1860  1394  0 17:01 tty1     00:00:00 /usr/bin/daemon -frB --pidfiles=~/.run --name=pipewire-media-session /usr/bin/pipewire-media-session
+abe       1861  1860  0 17:01 tty1     00:00:00 pipewire-media-session: /usr/bin/pipewire-media-session
+abe       2605  2584  0 17:05 pts/2    00:00:00 grep pipewire
+
+
+$ inxi -A
+Audio:     Device-1: Intel Broadwell-U Audio driver: snd_hda_intel 
+           Device-2: Intel Wildcat Point-LP High Definition Audio driver: snd_hda_intel 
+           Sound Server-1: ALSA v: k5.15.3-plamo64 running: yes 
+           Sound Server-2: PulseAudio v: 14.2 running: yes 
+           Sound Server-3: PipeWire v: 0.3.40 running: yes
+
+$ pactl info
+サーバー文字列: /run/user/1000/pulse/native
+ライブラリプロトコルバージョン: 35
+サーバープロトコルバージョン: 35
+Is ローカル: はい
+クライアントインデックス: 59
+タイルサイズ: 65472
+ユーザー名: abe
+ホスト名: plamolinux
+サーバー名: PulseAudio (on PipeWire 0.3.40)
+サーバーバージョン: 15.0.0
+デフォルトサンプル仕様: float32le 2ch 48000Hz
+デフォルトチャンネルマップ: front-left,front-right
+デフォルトシンク: alsa_output.pci-0000_00_1b.0.analog-stereo
+デフォルトソース: alsa_input.pci-0000_00_1b.0.analog-stereo
+クッキー: 6654:0d84
+

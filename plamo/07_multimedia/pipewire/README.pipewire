@@ -1,0 +1,30 @@
+pipewireパッケージをインストールしたデフォルトの状態では pipewire は有効化されません。
+デフォルトではサウンドサーバーとして pulseaudio が使われます。
+
+1. pipewireパッケージは /usr/sbin/ に以下のスクリプトをインストールします。
+
+・ pipewire-enable.sh -- pipewireを有効化するスクリプト
+   a) /etc/xdg/autostart/以下の pipewire関連のデスクトップファイル 
+      pipewire.desktop.sample, pipewire-pulse.desktop.sample, 
+      pipewire-media-session.desktop.sample をリネームし、pipewireの
+      desktopファイルが認識されるようにします。
+
+   b) pulseaudio.desktop の末尾に Hidden=true を追加し、pulseaudio.desktopを無効化します。
+
+   c) /etc/pulse/client.conf を変更
+　　　修正前）
+	autospawn = yes
+        allow-autospawn-for-root = yes
+　　　修正後）
+        autospawn = no
+        allow-autospawn-for-root = no
+
+・ pipewire-disable.sh -- 上記変更をデフォルト設定（pulseaudio）に戻す
+
+pipewireを有効にするためには、インストール後に pipewire-enable.sh を実行してください。
+
+
+2. 再起動後、pipewireが動作しているかどうかコマンドで確認できます。
+$ ps -ef | grep pipewire
+$ pactl info
+

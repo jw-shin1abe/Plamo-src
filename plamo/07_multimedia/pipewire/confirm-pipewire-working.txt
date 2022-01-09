@@ -1,0 +1,34 @@
+$ ps -ef | grep pipewire
+  abe       1550  1439  0 18:54 tty1     00:00:00 /usr/bin/daemon -frB --pidfiles=~/.run --name=pipewire /usr/bin/pipewire
+  abe       1562  1550  0 18:54 tty1     00:00:00 pipewire: /usr/bin/pipewire
+  abe       1566  1439  0 18:55 tty1     00:00:00 /usr/bin/daemon -frB --pidfiles=~/.run --name=pipewire-media-session /usr/bin/pipewire-media-session
+  abe       1567  1566  0 18:55 tty1     00:00:00 pipewire-media-session: /usr/bin/pipewire-media-session
+  abe       1573  1439  0 18:55 tty1     00:00:00 /usr/bin/daemon -frB --pidfiles=~/.run --name=pipewire-pulse /usr/bin/pipewire-pulse
+  abe       1574  1573  0 18:55 tty1     00:00:00 pipewire-pulse: /usr/bin/pipewire-pulse
+  abe       1916  1813  0 19:00 pts/2    00:00:00 grep pipewire
+---------------
+
+$ inxi -A
+  Audio:     Device-1: Intel 6 Series/C200 Series Family High Definition Audio driver: snd_hda_intel 
+             Sound Server-1: ALSA v: k5.10.31-plamo64 running: yes 
+             Sound Server-2: PipeWire v: 0.3.40 running: yes 
+---------------
+
+$ pactl info
+  サーバー文字列: /run/user/1000/pulse/native
+  ライブラリプロトコルバージョン: 34
+  サーバープロトコルバージョン: 35
+  Is ローカル: はい
+  クライアントインデックス: 49
+  タイルサイズ: 65472
+  ユーザー名: abe
+  ホスト名: plamolinux
+  サーバー名: PulseAudio (on PipeWire 0.3.40)
+  サーバーバージョン: 15.0.0
+  デフォルトサンプル仕様: float32le 2ch 48000Hz
+  デフォルトチャンネルマップ: front-left,front-right
+  デフォルトシンク: alsa_output.pci-0000_00_1b.0.analog-stereo
+  デフォルトソース: alsa_input.pci-0000_00_1b.0.analog-stereo
+  クッキー: cb00:a88b
+
+
