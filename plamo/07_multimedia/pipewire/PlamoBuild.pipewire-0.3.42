@@ -113,6 +113,7 @@ if [ $opt_package -eq 1 ] ; then
   cp -a $W/pipewire-pulse.desktop.sample $P/etc/xdg/autostart
   chown root:root $P/etc/xdg/autostart/*
   chmod 644 $P/etc/xdg/autostart/*
+# Add pipewire switcher scripts - Thanks. slackware
   mkdir -p $P/usr/sbin
   cp -a $W/pipewire-disable.sh $P/usr/sbin
   cp -a $W/pipewire-enable.sh $P/usr/sbin
