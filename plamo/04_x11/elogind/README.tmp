@@ -1,0 +1,5 @@
+version bump to 246.10
+# Move dbus configs to system location:
+mkdir -p $P/usr/share/dbus-1/system.d/
+mv $P/etc/dbus-1/system.d/* $P/usr/share/dbus-1/system.d/
+rmdir --parents $P/etc/dbus-1/system.d/
