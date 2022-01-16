@@ -1,1 +1,13 @@
-Test data for kernel-5.4 series with cjktty
+### Test data for kernel-5.4 series with cjktty
+
+cjktty-kernel-font-JP.patch -- Add CJK kernel font
+cjktty-kernel-5.4.64.patch  -- works up tp 5.4.64
+plamo-kernel-logo.diff      -- replace Tux-logo to plamo-icon-logo
+
+一部のHPラップトップPCに搭載されている Fingerprintデバイス（例：vfs495（ID: 138a:003f）)は Validity Sensor社が
+提供するプロプライエタリなドライバを使うことで動作させることが可能であるが、残念ながらこのドライバはカーネル 5.4シリーズ
+までしか機能しない。
+Plamolinux環境でそれを実現するにはまず 5.4.xカーネルをインストールすることになるが、plamoカーネルに取り込んでいる
+CJKパッチを 5.4シリーズ向けに作り直したところ カーネル 5.4.64 までは rejectなしで適用できるパッチを作ることができた。
+
+いまのところ 5.4.65以上のバージョンに使えるパッチはまだ未作成。
