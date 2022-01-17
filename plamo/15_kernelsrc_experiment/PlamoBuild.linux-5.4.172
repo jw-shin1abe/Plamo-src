@@ -1,0 +1,158 @@
+#!/bin/sh
+##############################################################
+pkgbase='kernel'
+vers='5.4.172'
+vers2='5.4.172'
+url="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${vers2}.tar.xz"
+arch=`uname -m`
+build=B1
+src="linux-${vers2}"
+OPT_CONFIG=''
+DOCS='COPYING MAINTAINERS README'
+patchfiles="plamo-kernel-logo.diff cjktty-kernel-font-JP.patch cjktty-kernel-5.4.172.patch"
+configfile="config-${vers2}-plamo64"
+initrdfile="initrd.img-${vers2}-plamo64"
+compress=tzst
+##############################################################
+
+source /usr/share/plamobuild_functions.sh
+
+# このスクリプトで使う1文字変数の意味
+#
+# $W : このスクリプトを動かすカレントディレクトリ
+# $S : ソースコードのあるディレクトリ(デフォルト: $W/${src})
+# $B : ビルド用ディレクトリ(デフォルト: /tmp/build{,32})
+# $P : ビルドしたファイルをインストールするディレクトリ（デフォルト: $W/work)
+
+
+if [ $# -eq 0 ] ; then
+  opt_download=0 ; opt_config=1 ; opt_build=1 ; opt_package=1
+else
+  opt_download=0 ; opt_config=0 ; opt_build=0 ; opt_package=0
+  for i in $@ ; do
+    case $i in
+    download) opt_download=1 ;;
+    config) opt_config=1 ;;
+    build) opt_build=1 ;;
+    package) opt_package=1 ;;
+    esac
+  done
+fi
+if [ $opt_download -eq 1 ] ; then
+    download_sources
+fi
+
+B=`pwd`/build
+if [ $opt_config -eq 1 ] ; then
+    if [ -d $B ] ; then rm -rf $B ; fi ; mkdir -p $B ; cp -a $S/* $B  
+######################################################################
+#  copy sources into build directory, patch and make in the build dir
+######################################################################
+    cd $B
+    for patch in $patchfiles ; do
+       patch -p1 < $W/$patch
+    done
+    cp $W/$configfile .config
+
+    if [ $? != 0 ]; then
+	echo "configure error. $0 script stop"
+	exit 255
+    fi
+fi
+    
+if [ $opt_build -eq 1 ] ; then
+    start=`date +"%D %"T`
+    ss=`date +"%s"`
+    cd $B
+    echo "begin: $start"
+    make -j6
+    if [ $? != 0 ]; then
+	echo "build error. $0 script stop"
+	exit 255
+    fi
+    end=`date +"%D %T"`
+    echo "end: $end"
+    es=`date +"%s"`
+    echo "begin:$start, end:$end"
+    echo "lap: ${es} - ${ss}"
+fi
+
+# initrd を作り直す必要があるが、そのためには一度、
+# make modules_install する必要がある
+
+# sudo make modules_install
+# sudo mkinitramfs ${vers}-plamo64
+
+if [ $opt_package -eq 1 ] ; then
+  check_root
+  if [ -d $P ] ; then rm -rf $P ; fi ; mkdir -p $P
+  mkdir -p $P/boot
+
+  cd $B
+  make modules_install INSTALL_MOD_PATH=$P
+  ( cd $P/lib/modules/${vers2}-plamo64 ; rm -rf source ; ln -sf /usr/src/linux source )
+  ( cd $P/lib/modules/${vers2}-plamo64 ; rm -rf build ; ln -sf /usr/src/linux build )
+  
+  install System.map $P/boot/System.map-${vers2}-plamo64
+  install .config $P/boot/config-${vers2}-plamo64
+  install arch/x86/boot/bzImage $P/boot/vmlinuz-${vers2}-plamo64
+  install $W/$initrdfile $P/boot/initrd.img-${vers2}-plamo64
+
+  ( cd $P/boot ; ln -sf System.map-${vers2}-plamo64 System.map )
+  ( cd $P/boot ; ln -sf config-${vers2}-plamo64 .config )
+  ( cd $P/boot ; ln -sf vmlinuz-${vers2}-plamo64 vmlinuz )
+
+################################
+#      install tweaks
+#  strip binaries, delete locale except ja, compress man, 
+#  install docs and patches, compress them and  chown root.root
+################################
+  install_tweak
+
+#############################
+#   convert symlink to null file and 
+#   add "ln -sf" command into install/doinst.sh
+################################
+  convert_links
+
+  cd $P
+  /sbin/makepkg ../kernel-${vers2}-${arch}-${build}.$compress <<EOF
+y
+1
+EOF
+
+  echo "Building header package"
+  P2=$W/headers
+  mkdir -p $P2
+  cd $B
+  make headers_install INSTALL_HDR_PATH=$P2/usr
+  cd $P2
+  /sbin/makepkg ../kernel_headers-${vers2}-${arch}-${build}.${compress} <<EOF
+y
+1
+EOF
+
+  echo "Building source package"
+  rm -rf $P
+  mkdir -p $P/usr/src/linux-${vers}
+  cd $B
+  make clean
+  chk=`whoami | grep root`
+  if [ "$chk.x" != ".x" ]; then
+      chown -R root.root *
+  else
+      not_root=1
+  fi
+  cp -a * $P/usr/src/linux-${vers}
+  cd $P
+  ( cd usr/src ; ln -sf linux-$vers linux )
+  /sbin/makepkg ../kernelsrc-${vers2}-${arch}-${build}.${compress} <<EOF
+y
+1
+EOF
+  if [ "$not_root" = "1" ]; then
+      echo "Packaged by non-root user account."
+      echo "Be sure to set files ownerships."
+  fi
+  
+fi
