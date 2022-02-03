@@ -5,3 +5,9 @@ cjk-tty適用のカーネル-5.16.x パッケージ用スクリプト
  
 - config-5.16.5-plamo64 は slackware64-currentの config-huge-5.16.5.x64 をベースにして作成してます。
 　config詳細は精査しておらずplamo的な最適化等はしていません。
+ [Plamo用に設定した箇所]
+ ・CONFIG_LOCALVERSION="-plamo64"
+ ・CONFIG_DEFAULT_HOSTNAME="plamolinux"
+ ・CONFIG_FONT_CJK_16x16=y
+ 　CONFIG_FONT_CJK_32x32=y
+  
