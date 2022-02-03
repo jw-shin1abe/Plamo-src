@@ -1,1 +1,7 @@
 cjk-tty適用のカーネル-5.16.x パッケージ用スクリプト
+
+- cjktty-kernel-5.16.patch には cjktty-kernel-font-JP関連パッチが統合されています。
+　本パッチのオリジナルは https://github.com/zhmars/cjktty-patches/tree/master/v5.x のものです。 Thanks zhmars。　
+ 
+- config-5.16.5-plamo64 は slackware64-currentの config-huge-5.16.5.x64 をベースにして作成してます。
+　config詳細は精査しておらずplamo的な最適化等はしていません。
