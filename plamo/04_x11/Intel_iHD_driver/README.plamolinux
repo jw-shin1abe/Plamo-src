@@ -1,6 +1,6 @@
 X起動時に iHD ドライバを有効にするには以下を ~/.xinitrc に追記する。（startx起動の場合）
 --- >8 --- >8 ---
 ### Intel Media Driver
-export LIBVA_DRIVERS_PATH=/usr/lib64/xorg/modules/dri
+export LIBVA_DRIVERS_PATH=/usr/lib/dri
 export LIBVA_DRIVER_NAME=iHD
 #export LIBVA_DRIVER_NAME=i915
